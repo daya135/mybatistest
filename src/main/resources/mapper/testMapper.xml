@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xml.mapper.TestMapper">  <!-- 注意命名空间 -->
+    <select id="selectTest" parameterType="int" resultType="xmlAliasMyBean"> <!-- int是内置别名, "xmlAliasMyBean"是在config文件中定义的别名-->
+        select * from Kustom.dbo.test where id = #{id}
+    </select>
+
+    <insert id="insertTest"
+        parameterType="xmlAliasMyBean"
+        flushCache="true"
+        statementType="PREPARED"
+        keyColumn="id"
+        useGeneratedKeys="false"
+        timeout="20">
+        insert into Kustom.dbo.test(id, name) values(#{id}, #{name})
+    </insert>
+
+    <insert id="insertMyBeans"> <!-- sybase不支持多行插入写法 -->
+        insert into Kustom.dbo.test(id, name) values
+        <foreach collection="list" separator="," item="item">
+            (#{item.id}, #{item.name})
+        </foreach>
+    </insert>
+
+</mapper>
